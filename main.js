@@ -123,6 +123,16 @@ canvas.addEventListener("mousedown", function(e) {
 });
 canvas.addEventListener("mouseup", function(e) {
     drag = false;  
+    if(obstacles[obstacles.length-1].right < obstacles[obstacles.length-1].left){
+        let temp = obstacles[obstacles.length-1].right;
+        obstacles[obstacles.length-1].right = obstacles[obstacles.length-1].left;
+        obstacles[obstacles.length-1].left = temp;
+    }
+    if(obstacles[obstacles.length-1].bottom < obstacles[obstacles.length-1].top){
+        let temp = obstacles[obstacles.length-1].bottom;
+        obstacles[obstacles.length-1].bottom = obstacles[obstacles.length-1].top;
+        obstacles[obstacles.length-1].top = temp;
+    }
 });
 canvas.addEventListener("mousemove", function(e) {
     if (drag){
@@ -133,6 +143,7 @@ canvas.addEventListener("mousemove", function(e) {
         if(addObstacles){
             obstacles[obstacles.length-1].right = e.clientX - rect.left;
             obstacles[obstacles.length-1].bottom = e.clientY - rect.top;
+
         }
     }
 
@@ -151,6 +162,16 @@ canvas.addEventListener("touchstart", function(e) {
 });
 canvas.addEventListener("touchend", function(e) {
     drag = false;  
+    if(obstacles[obstacles.length-1].right < obstacles[obstacles.length-1].left){
+        let temp = obstacles[obstacles.length-1].right;
+        obstacles[obstacles.length-1].right = obstacles[obstacles.length-1].left;
+        obstacles[obstacles.length-1].left = temp;
+    }
+    if(obstacles[obstacles.length-1].bottom < obstacles[obstacles.length-1].top){
+        let temp = obstacles[obstacles.length-1].bottom;
+        obstacles[obstacles.length-1].bottom = obstacles[obstacles.length-1].top;
+        obstacles[obstacles.length-1].top = temp;
+    }
 });
 canvas.addEventListener("touchmove", function(e) {
     if (drag){
