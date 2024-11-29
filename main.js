@@ -8,7 +8,7 @@ var width = canvas.width;
 var height = canvas.height;
 const boids = [];
 const obstacles = [];
-const population = 500;
+const population = 200;
 
 const sepBar = document.getElementById("separation");
 const aliBar = document.getElementById("alignment");
