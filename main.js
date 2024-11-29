@@ -138,4 +138,32 @@ canvas.addEventListener("mousemove", function(e) {
 
 });
 
+canvas.addEventListener("touchdown", function(e) {
+    const rect = e.target.getBoundingClientRect();
+    drag = true;
+    if(addBoids){
+        boids.push(new Boid(e.clientX - rect.left,e.clientY - rect.top));
+    }
+    if(addObstacles){
+        obstacles.push(new Obstacle(e.clientX - rect.left,e.clientY - rect.top))
+    }
+
+});
+canvas.addEventListener("touchup", function(e) {
+    drag = false;  
+});
+canvas.addEventListener("touchmove", function(e) {
+    if (drag){
+        const rect = e.target.getBoundingClientRect();
+        if(addBoids){
+            boids.push(new Boid(e.clientX - rect.left,e.clientY - rect.top));
+        }
+        if(addObstacles){
+            obstacles[obstacles.length-1].right = e.clientX - rect.left;
+            obstacles[obstacles.length-1].bottom = e.clientY - rect.top;
+        }
+    }
+
+});
+
 init();
