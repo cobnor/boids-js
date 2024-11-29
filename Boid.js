@@ -39,16 +39,83 @@ export default class Boid{
         this.velX += this.accX;
         this.velY += this.accY;
     }
-    flock(boids, a, c, s){
+    flock(boids, obstacles, a, c, s){
         const align = this.alignment(boids,a);
         const cohere = this.cohesion(boids,c);
         const separate = this.separation(boids,s);
-        this.accX = a*align[0] + c*cohere[0] + s*separate[0];
-        this.accY = a*align[1] + c*cohere[1] + s*separate[1];
+        const avoid = this.avoidObstacles(obstacles);
+        this.accX = a*align[0] + c*cohere[0] + s*separate[0] + 5*avoid[0];
+        this.accY = a*align[1] + c*cohere[1] + s*separate[1] + 5*avoid[1];
         //this.accX = separate[0];
         //this.accY = separate[1];
-
     }
+
+    avoidObstacles(obstacles){
+        const localRadius = 50;
+        const padding = 25;
+        var forceX = 0;
+        var forceY = 0;
+        var count = 0;
+
+        for(let o of obstacles){
+            let outside = true;
+            if (outside){
+                let distToLeft = Math.abs(this.x - o.left);
+                let distToRight = Math.abs(this.x - o.right);
+                let distToTop = Math.abs(this.y - o.top);
+                let distToBottom = Math.abs(this.y - o.bottom);
+                let minDist = Math.min(distToLeft,distToRight,distToTop,distToBottom);
+                //collision with left wall (-1, 0) vector out
+                if(this.y > o.top-padding && this.y < o.bottom+padding){
+                    if (distToLeft < localRadius && distToLeft == minDist){
+                        forceX += -Math.abs(this.length(this.velX,this.velY)/(0.2*distToLeft));
+                        forceY += 10/(this.velY);
+                        count++;
+                    }
+                }
+                //collision with right wall (1, 0) vector out
+                if(this.y > o.top-padding && this.y < o.bottom+padding){
+                    if (distToRight < localRadius && distToRight == minDist){
+                        forceX += Math.abs(this.length(this.velX,this.velY)/(0.2*distToRight));
+                        forceY += 10/(this.velY);
+                        count++;
+                    }
+                }
+
+                //collision with top wall (0 -1) vector out
+                if(this.x > o.left-padding && this.x < o.right+padding){
+                    if (distToTop < localRadius && distToTop == minDist){
+                        forceY += -Math.abs(this.length(this.velX,this.velY)/(0.2*distToTop));
+                        forceX += 10/(this.velX);
+                        count++;
+                    }
+                }
+
+                //collision with bottom wall (0 -1) vector out
+                if(this.x > o.left-padding && this.x < o.right+padding){
+                    if (distToBottom < localRadius && distToBottom == minDist){
+                        forceY += Math.abs(this.length(this.velX,this.velY)/(0.2*distToBottom));
+                        forceX += 10/(this.velX);
+                        count++;
+                    }
+                }
+            }
+        }
+        if(count > 0){
+            forceX /= count;
+            forceY /= count;
+            
+            forceX = this.setMagnitude(forceX, forceY, this.maxSpeed)[0] - this.velX;
+            forceY = this.setMagnitude(forceX, forceY, this.maxSpeed)[1] - this.velY;
+            if(this.length(forceX, forceY) > this.maxForce){
+                forceX = this.setMagnitude(forceX, forceY, this.maxForce)[0];
+                forceY = this.setMagnitude(forceX, forceY, this.maxForce)[1];
+            }
+        }
+
+        return [forceX, forceY]
+    }
+
     alignment(boids,a){ // apply force in direction of average position of local flockmates
         const localRadius = 50*a;
         var forceX = 0;
@@ -112,7 +179,6 @@ export default class Boid{
 
     separation(boids,s){ // apply force inversely proportional to distance to local flockmates
         const localRadius = 40*s;
-        console.log(localRadius)
         var forceX = 0;
         var forceY = 0;
         var count = 0;
