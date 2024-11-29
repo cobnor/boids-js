@@ -1,0 +1,8 @@
+canvas {
+    border : 1px solid rgb(105, 105, 105);
+    position:absolute;
+}
+
+body{
+    background-color: #1C1E27;
+}
