@@ -110,6 +110,7 @@ oButton.onclick = function (){
     addObstacles = true;
     addBoids = false;
 };
+
 canvas.addEventListener("mousedown", function(e) {
     const rect = e.target.getBoundingClientRect();
     drag = true;
@@ -123,15 +124,17 @@ canvas.addEventListener("mousedown", function(e) {
 });
 canvas.addEventListener("mouseup", function(e) {
     drag = false;  
-    if(obstacles[obstacles.length-1].right < obstacles[obstacles.length-1].left){
-        let temp = obstacles[obstacles.length-1].right;
-        obstacles[obstacles.length-1].right = obstacles[obstacles.length-1].left;
-        obstacles[obstacles.length-1].left = temp;
-    }
-    if(obstacles[obstacles.length-1].bottom < obstacles[obstacles.length-1].top){
-        let temp = obstacles[obstacles.length-1].bottom;
-        obstacles[obstacles.length-1].bottom = obstacles[obstacles.length-1].top;
-        obstacles[obstacles.length-1].top = temp;
+    if (obstacles.length > 0){
+        if(obstacles[obstacles.length-1].right < obstacles[obstacles.length-1].left){
+            let temp = obstacles[obstacles.length-1].right;
+            obstacles[obstacles.length-1].right = obstacles[obstacles.length-1].left;
+            obstacles[obstacles.length-1].left = temp;
+        }
+        if(obstacles[obstacles.length-1].bottom < obstacles[obstacles.length-1].top){
+            let temp = obstacles[obstacles.length-1].bottom;
+            obstacles[obstacles.length-1].bottom = obstacles[obstacles.length-1].top;
+            obstacles[obstacles.length-1].top = temp;
+        }
     }
 });
 canvas.addEventListener("mousemove", function(e) {
@@ -153,35 +156,38 @@ canvas.addEventListener("touchstart", function(e) {
     const rect = e.target.getBoundingClientRect();
     drag = true;
     if(addBoids){
-        boids.push(new Boid(e.clientX - rect.left,e.clientY - rect.top));
+        boids.push(new Boid(e.touches[0].clientX - rect.left,e.touches[0].clientY - rect.top));
     }
     if(addObstacles){
-        obstacles.push(new Obstacle(e.clientX - rect.left,e.clientY - rect.top))
+        obstacles.push(new Obstacle(e.touches[0].clientX - rect.left,e.touches[0].clientY - rect.top))
     }
 
 });
 canvas.addEventListener("touchend", function(e) {
     drag = false;  
-    if(obstacles[obstacles.length-1].right < obstacles[obstacles.length-1].left){
-        let temp = obstacles[obstacles.length-1].right;
-        obstacles[obstacles.length-1].right = obstacles[obstacles.length-1].left;
-        obstacles[obstacles.length-1].left = temp;
+    if(obstacles.length > 0){
+        if(obstacles[obstacles.length-1].right < obstacles[obstacles.length-1].left){
+            let temp = obstacles[obstacles.length-1].right;
+            obstacles[obstacles.length-1].right = obstacles[obstacles.length-1].left;
+            obstacles[obstacles.length-1].left = temp;
+        }
+        if(obstacles[obstacles.length-1].bottom < obstacles[obstacles.length-1].top){
+            let temp = obstacles[obstacles.length-1].bottom;
+            obstacles[obstacles.length-1].bottom = obstacles[obstacles.length-1].top;
+            obstacles[obstacles.length-1].top = temp;
+        }
     }
-    if(obstacles[obstacles.length-1].bottom < obstacles[obstacles.length-1].top){
-        let temp = obstacles[obstacles.length-1].bottom;
-        obstacles[obstacles.length-1].bottom = obstacles[obstacles.length-1].top;
-        obstacles[obstacles.length-1].top = temp;
-    }
+
 });
 canvas.addEventListener("touchmove", function(e) {
     if (drag){
         const rect = e.target.getBoundingClientRect();
         if(addBoids){
-            boids.push(new Boid(e.clientX - rect.left,e.clientY - rect.top));
+            boids.push(new Boid(e.touches[0].clientX - rect.left,e.touches[0].clientY - rect.top));
         }
         if(addObstacles){
-            obstacles[obstacles.length-1].right = e.clientX - rect.left;
-            obstacles[obstacles.length-1].bottom = e.clientY - rect.top;
+            obstacles[obstacles.length-1].right = e.touches[0].clientX - rect.left;
+            obstacles[obstacles.length-1].bottom = e.touches[0].clientY - rect.top;
         }
     }
 
