@@ -1,4 +1,5 @@
 import Boid from "./Boid.js";
+import Obstacle from "./Obstacle.js";
 const canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth*0.9;
 canvas.height = window.innerHeight*0.9;
@@ -6,12 +7,18 @@ const ctx = canvas.getContext("2d");
 var width = canvas.width;
 var height = canvas.height;
 const boids = [];
-const population = 500;
+const obstacles = [];
+const population = 200;
 
 const sepBar = document.getElementById("separation");
 const aliBar = document.getElementById("alignment");
 const cohBar = document.getElementById("cohesion");
+const bButton = document.getElementById("boidsButton");
+const oButton = document.getElementById("obstaclesButton");
 
+var addBoids = true;
+var addObstacles = false;
+var drag = false;
 
 function init(){
     sepBar.value = 60;
@@ -32,11 +39,20 @@ function update(){
     for (let b of boids){
         drawBoid(b);
         b.move();
-        b.flock(boids, 2*aliBar.value/100, 2*aliBar.value/100, 2*sepBar.value/100);
+        b.flock(boids, obstacles, 2*aliBar.value/100, 2*aliBar.value/100, 2*sepBar.value/100);
         b.x = ((b.x % width) + width) % width
         b.y = ((b.y % height) + height) % height
     }
+    for(let o of obstacles){
+        drawObstacle(o);
+    }
     window.requestAnimationFrame(update);
+}
+function drawObstacle(o){
+    ctx.strokeStyle = "rgb(255 255 255)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(o.left,o.top,o.right-o.left,o.bottom-o.top);
+    ctx.lineWidth = 1;
 }
 function drawBoid(b){
     const size = 5;
@@ -53,6 +69,7 @@ function drawBoid(b){
     //ctx.fillRect(b.x-2,b.y-2,4,4);
 
     // body
+    
     ctx.strokeStyle = "rgb(255 255 255)";
     ctx.beginPath();
     ctx.moveTo(x,y);
@@ -80,7 +97,45 @@ function drawBoid(b){
     //ctx.lineTo(10,10);
     ctx.lineWidth = 1;
     ctx.stroke();
+    
 
 }
+
+
+bButton.onclick = function (){
+    addBoids = true;
+    addObstacles = false;
+};
+oButton.onclick = function (){
+    addObstacles = true;
+    addBoids = false;
+};
+canvas.addEventListener("mousedown", function(e) {
+    const rect = e.target.getBoundingClientRect();
+    drag = true;
+    if(addBoids){
+        boids.push(new Boid(e.clientX - rect.left,e.clientY - rect.top));
+    }
+    if(addObstacles){
+        obstacles.push(new Obstacle(e.clientX - rect.left,e.clientY - rect.top))
+    }
+
+});
+canvas.addEventListener("mouseup", function(e) {
+    drag = false;  
+});
+canvas.addEventListener("mousemove", function(e) {
+    if (drag){
+        const rect = e.target.getBoundingClientRect();
+        if(addBoids){
+            boids.push(new Boid(e.clientX - rect.left,e.clientY - rect.top));
+        }
+        if(addObstacles){
+            obstacles[obstacles.length-1].right = e.clientX - rect.left;
+            obstacles[obstacles.length-1].bottom = e.clientY - rect.top;
+        }
+    }
+
+});
 
 init();
