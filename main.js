@@ -138,7 +138,7 @@ canvas.addEventListener("mousemove", function(e) {
 
 });
 
-canvas.addEventListener("touchdown", function(e) {
+canvas.addEventListener("touchstart", function(e) {
     const rect = e.target.getBoundingClientRect();
     drag = true;
     if(addBoids){
@@ -149,7 +149,7 @@ canvas.addEventListener("touchdown", function(e) {
     }
 
 });
-canvas.addEventListener("touchup", function(e) {
+canvas.addEventListener("touchend", function(e) {
     drag = false;  
 });
 canvas.addEventListener("touchmove", function(e) {
