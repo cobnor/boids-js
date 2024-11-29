@@ -9,16 +9,16 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <div class="slidecontainer">
       <input type="range" min="1" max="100" value="60" class="slider" id="separation">
-      <output id="sepOut"></output>
       <input type="range" min="1" max="100" value="50" class="slider" id="alignment">
-      <output id="aliOut"></output>
       <input type="range" min="1" max="100" value="50" class="slider" id="cohesion">
-      <output id="cohOut"></output>
+      <button type="button" id="boidsButton">Add boids on click</button>
+      <button type="button" id="obstaclesButton">Add obstacles on click</button>
     </div>
   </head>
 
   <body>
     <script type="module" src="./Boid.js" ></script>
+    <script type="module" src="./Obstacle.js" ></script>
     <script type="module" src="./main.js"></script>
     <canvas id="canvas" width="1000" height="700"></canvas>
   </body>
