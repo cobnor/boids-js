@@ -39,7 +39,7 @@ function update(){
     for (let b of boids){
         drawBoid(b);
         b.move();
-        b.flock(boids, obstacles, 2*aliBar.value/100, 2*aliBar.value/100, 2*sepBar.value/100);
+        b.flock(boids, obstacles, 2*aliBar.value/100, 2*cohBar.value/100, 2*sepBar.value/100);
         b.x = ((b.x % width) + width) % width
         b.y = ((b.y % height) + height) % height
     }
