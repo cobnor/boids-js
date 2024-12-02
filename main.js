@@ -15,9 +15,11 @@ const aliBar = document.getElementById("alignment");
 const cohBar = document.getElementById("cohesion");
 const bButton = document.getElementById("boidsButton");
 const oButton = document.getElementById("obstaclesButton");
+const bodyButton = document.getElementById("bodyButton");
 
 var addBoids = true;
 var addObstacles = false;
+var bodyEnabled = true;
 var drag = false;
 
 function init(){
@@ -64,39 +66,40 @@ function drawBoid(b){
     var x = b.x;
     var y = b.y;
     
-    //head
-    //ctx.fillStyle = "rgb(255 0 0)";
-    //ctx.fillRect(b.x-2,b.y-2,4,4);
+    if(bodyEnabled){
+        //draw body
+        ctx.strokeStyle = "rgb(255 255 255)";
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        x += size * Math.cos(currentAngle);
+        y += size * Math.sin(currentAngle);
+        ctx.lineTo(x,y);
+        currentAngle += 2/3 * Math.PI;
+        x -= size * Math.cos(currentAngle);
+        y -= size * Math.sin(currentAngle);
+        ctx.lineTo(x,y);
+        x = b.x;
+        y = b.y;
+        ctx.lineTo(x,y);
+        currentAngle = angle;
+        x += size * Math.cos(currentAngle);
+        y += size * Math.sin(currentAngle);
+        ctx.moveTo(x,y)
+        currentAngle -= 2/3 * Math.PI;
+        x -= size * Math.cos(currentAngle);
+        y -= size * Math.sin(currentAngle);
+        ctx.lineTo(x,y);
+        ctx.lineTo(b.x,b.y);
+        
 
-    // body
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    } else{
+        //draw head
+        ctx.fillStyle = "rgb(255 255 255)";
+        ctx.fillRect(b.x-2,b.y-2,4,4);
+    }
     
-    ctx.strokeStyle = "rgb(255 255 255)";
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    x += size * Math.cos(currentAngle);
-    y += size * Math.sin(currentAngle);
-    ctx.lineTo(x,y);
-    currentAngle += 2/3 * Math.PI;
-    x -= size * Math.cos(currentAngle);
-    y -= size * Math.sin(currentAngle);
-    ctx.lineTo(x,y);
-    x = b.x;
-    y = b.y;
-    ctx.lineTo(x,y);
-    currentAngle = angle;
-    x += size * Math.cos(currentAngle);
-    y += size * Math.sin(currentAngle);
-    ctx.moveTo(x,y)
-    currentAngle -= 2/3 * Math.PI;
-    x -= size * Math.cos(currentAngle);
-    y -= size * Math.sin(currentAngle);
-    ctx.lineTo(x,y);
-    ctx.lineTo(b.x,b.y);
-    
-
-    //ctx.lineTo(10,10);
-    ctx.lineWidth = 1;
-    ctx.stroke();
     
 
 }
@@ -110,7 +113,9 @@ oButton.onclick = function (){
     addObstacles = true;
     addBoids = false;
 };
-
+bodyButton.onclick = function (){
+    bodyEnabled = !bodyEnabled;
+};
 canvas.addEventListener("mousedown", function(e) {
     const rect = e.target.getBoundingClientRect();
     drag = true;
